@@ -45,7 +45,7 @@ def get_heroes():
     return jsonify([hero.to_dict() for hero in heroes]), 200
 
 # Route to fetch a hero by ID
-@app.route('/heroes/<int:id>/', methods=['GET'])
+@app.route('/heroes/<int:id>', methods=['GET'])
 def get_hero(id):
     hero = Hero.query.get(id)
     if hero:
