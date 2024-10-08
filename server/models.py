@@ -19,8 +19,9 @@ class Hero(db.Model, SerializerMixin):
     super_name = db.Column(db.String)
 
     # add relationship
-    hero_powers = relationship("HeroPower", back_populates="hero", cascade="all, delete-orphan")
+    hero_powers = relationship("HeroPower", back_populates="hero")
     powers = association_proxy('hero_powers', 'power')
+    
     # add serialization rules
     serialize_rules = ('-hero_powers.hero',)
 
@@ -37,7 +38,7 @@ class Power(db.Model, SerializerMixin):
     description = db.Column(db.String)
 
     # add relationship
-    hero_powers = relationship("HeroPower", back_populates="power", cascade="all, delete-orphan")
+    hero_powers = relationship("HeroPower", back_populates="power")
 
     # add serialization rules
     heroes = association_proxy('hero_powers', 'hero')
@@ -77,6 +78,17 @@ class HeroPower(db.Model, SerializerMixin):
         if strength not in ['Strong', 'Weak', 'Average']:
             raise ValueError("Strength must be one of: 'Strong', 'Weak', 'Average'")
         return strength
+
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "strength": self.strength,
+            "hero_id": self.hero_id,
+            "power_id": self.power_id,
+            "hero": self.hero.to_dict(),
+            "power": self.power.to_dict()
+        }
 
     def __repr__(self):
         return f'<HeroPower {self.id}>'
