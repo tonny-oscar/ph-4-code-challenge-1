@@ -22,12 +22,10 @@ class Hero(db.Model, SerializerMixin):
     hero_powers = relationship("HeroPower", back_populates="hero")
     powers = association_proxy('hero_powers', 'power')
     
-    # add serialization rules
     serialize_rules = ('-hero_powers.hero',)
 
     def __repr__(self):
         return f'<Hero {self.id}>'
-        # return f'<Hero {self.name} ({self.super_name})>'
 
 
 class Power(db.Model, SerializerMixin):
@@ -53,7 +51,7 @@ class Power(db.Model, SerializerMixin):
 
     def __repr__(self):
         return f'<Power {self.id}>'
-        # return f'<Power {self.name}>'
+    
 
 
 class HeroPower(db.Model, SerializerMixin):
@@ -69,10 +67,10 @@ class HeroPower(db.Model, SerializerMixin):
     hero = relationship("Hero", back_populates="hero_powers")
     power = relationship("Power", back_populates="hero_powers")
 
-    # add serialization rules
+   
     serialize_rules = ('-hero.hero_powers', '-power.hero_powers')
 
-    # add validation
+    
     @validates('strength')
     def validate_strength(self, key, strength):
         if strength not in ['Strong', 'Weak', 'Average']:
